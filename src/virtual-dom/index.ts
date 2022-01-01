@@ -1,6 +1,10 @@
 type Props = {
   [Key: string]: string;
 };
+type EventsKeys = keyof GlobalEventHandlers;
+type Events = {
+  [Event in EventsKeys]+?: any;
+};
 type TH = string | H;
 type Children = (H | string)[];
 export class H {
@@ -8,10 +12,17 @@ export class H {
   tag: string;
   props: Props;
   children: Children;
-  constructor(tag: string, children?: Children, props?: Props) {
+  events: Events;
+  constructor(
+    tag: string,
+    children?: Children,
+    props?: Props,
+    events?: Events
+  ) {
     this.tag = tag;
     this.children = (children || []).filter((x) => x);
     this.props = props || {};
+    this.events = events || {};
   }
 }
 export class Render {
@@ -33,6 +44,9 @@ export class Render {
     Object.entries(h.props)
       .filter(([_, value]) => value)
       .forEach(([attr, value]) => $el.setAttribute(attr, value));
+    Object.entries(h.events)
+      .filter(([_, value]) => value)
+      .forEach(([attr, value]) => ($el[attr as EventsKeys] = value));
 
     // node의 children virtual dom을 dom으로 변환한다.
     // 즉, 모든 VirtualDOM을 순회한다.
@@ -43,6 +57,26 @@ export class Render {
 
     // 변환된 dom을 반환한다.
     return $el;
+  }
+  updateEventhandlers(target: Element, newEvents: Events, oldEvents: Events) {
+    // for (const attr of Object.keys(oldEvents)) {
+    //   (target as any)[attr as "onclick"] = null;
+    //   console.log(target);
+    // }
+    // for (const [attr, value] of Object.entries(newEvents)) {
+    //   console.log("vadawdaw");
+    //   (target as any)[attr as "onclick"] = value;
+    // }
+    for (const [attr, value] of Object.entries(newEvents)) {
+      if (oldEvents[attr as EventsKeys] === value) continue;
+      (target as any)[attr] = value;
+    }
+
+    // 없어진 props를 attribute에서 제거
+    for (const attr of Object.keys(oldEvents)) {
+      if (newEvents[attr as EventsKeys] !== undefined) continue;
+      (target as any)[attr] = null;
+    }
   }
   updateAttributes(target: Element, newProps: Props, oldProps: Props) {
     // 달라지거나 추가된 Props를 반영
@@ -91,7 +125,12 @@ export class Render {
       );
     }
 
-    this.updateAttributes(parent, newNode.props, oldNode.props);
+    this.updateAttributes(parent.children[index], newNode.props, oldNode.props);
+    this.updateEventhandlers(
+      parent.children[index],
+      newNode.events,
+      oldNode.events
+    );
 
     const maxLength = Math.max(
       newNode.children.length,
@@ -99,12 +138,6 @@ export class Render {
     );
 
     for (let i = 0; i < maxLength; i++) {
-      //   console.log(
-      //     JSON.stringify(parent),
-      //     JSON.stringify(parent.children[i]),
-      //     i,
-      //     "ㅗ히오히"
-      //   );
       this.updateElement(
         newNode.children[i] || "",
         oldNode.children[i] || "",

@@ -28,13 +28,6 @@ export class Ui<T extends ComponentProps> {
     this.renderer.updateElement(this.#template);
   }
 
-  #uuid() {
-    return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, (c) => {
-      var r = (Math.random() * 16) | 0,
-        v = c == "x" ? r : (r & 0x3) | 0x8;
-      return v.toString(16);
-    });
-  }
   get #template() {
     const children = Object.entries(this.ids).map(
       ([id, props]) =>
@@ -42,24 +35,29 @@ export class Ui<T extends ComponentProps> {
           "data-id": id,
         })
     );
-    console.log(children, "dljawdkla");
     return new H("div", children, { id: this.#id });
   }
 
-  set ids({ id, props }: { id?: string; props?: T }) {
+  protected set ids({ id, props }: { id?: string; props?: T }) {
     if (props) this.#ids[id] = props;
     else delete this.#ids[id];
     this.#render();
   }
-  get ids(): Ids<T> {
+  protected get ids(): Ids<T> {
     return this.#ids;
   }
-  protected _show(props: T) {
-    const id = this.#uuid();
+  protected uuid() {
+    return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, (c) => {
+      var r = (Math.random() * 16) | 0,
+        v = c == "x" ? r : (r & 0x3) | 0x8;
+      return v.toString(16);
+    });
+  }
+  protected _show(id: string, props: T) {
     this.ids = { id, props };
     return id;
   }
-  protected _hide(id: string) {
+  protected hide(id: string) {
     this.ids = { id };
   }
 }
