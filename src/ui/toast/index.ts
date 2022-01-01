@@ -18,8 +18,8 @@ export default class Toast extends Ui<DialogComponentProps> {
     const h = new H(
       "div",
       [
-        new H("div", [props.header], { class: "ux-dialog__header" }),
-        new H("div", [props.message], { class: "ux-dialog__content" }),
+        new H("div", [props.header], { class: "ux-toast__header" }),
+        new H("div", [props.message], { class: "ux-toast__content" }),
         new H(
           "div",
           [
@@ -28,11 +28,11 @@ export default class Toast extends Ui<DialogComponentProps> {
             }),
           ],
           {
-            class: "ux-dialog__footer",
+            class: "ux-toast__footer",
           }
         ),
       ],
-      { class: "ux-dialog" }
+      { class: "ux-toast" }
     );
     return super._show(id, { ...props, content: h });
   }

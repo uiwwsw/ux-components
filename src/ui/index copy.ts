@@ -15,9 +15,22 @@ export class Ui<T extends ComponentProps> {
     this.id = id;
   }
 
+  #render() {
+    this.renderer.updateElement(this.#template);
+  }
+
+  get #template() {
+    const children = Object.entries(this.ids).map(
+      ([_, props]) => props.content
+    );
+    console.log(this.id);
+    return new H("div", children, { id: this.id });
+  }
+
   protected set ids({ id, props }: { id?: string; props?: T }) {
     if (props) this.#ids[id] = props;
     else delete this.#ids[id];
+    this.#render();
   }
   protected get ids(): Ids<T> {
     return this.#ids;

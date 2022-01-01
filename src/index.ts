@@ -1,5 +1,6 @@
 import Dialog from "./ui/dialog";
 import Toast from "./ui/toast";
+import { Render } from "./virtual-dom";
 // import "./ui/dialog/style.scss";
 // import Toast from "./ui/toast";
 // const t = new Toast("#ux-toast");

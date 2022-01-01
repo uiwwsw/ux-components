@@ -31,10 +31,10 @@ export class Render {
   constructor(h: H, rootSelector: string) {
     this.#h = h;
     this.$rootSelector = document.querySelector(rootSelector);
-    h && this.$rootSelector.appendChild(this.createElement(this.#h));
+    h && this.$rootSelector.appendChild(this.#createElement(this.#h));
   }
 
-  createElement(h: TH) {
+  #createElement(h: TH) {
     if (typeof h === "string") return document.createTextNode(h);
 
     // tag에 대한 element를 만든다.
@@ -51,14 +51,14 @@ export class Render {
     // node의 children virtual dom을 dom으로 변환한다.
     // 즉, 모든 VirtualDOM을 순회한다.
     h.children.forEach((child) => {
-      const element = this.createElement(child);
+      const element = this.#createElement(child);
       element && $el.appendChild(element);
     });
 
     // 변환된 dom을 반환한다.
     return $el;
   }
-  updateEventhandlers(target: Element, newEvents: Events, oldEvents: Events) {
+  #updateEventhandlers(target: Element, newEvents: Events, oldEvents: Events) {
     // for (const attr of Object.keys(oldEvents)) {
     //   (target as any)[attr as "onclick"] = null;
     //   console.log(target);
@@ -78,7 +78,7 @@ export class Render {
       (target as any)[attr] = null;
     }
   }
-  updateAttributes(target: Element, newProps: Props, oldProps: Props) {
+  #updateAttributes(target: Element, newProps: Props, oldProps: Props) {
     // 달라지거나 추가된 Props를 반영
     for (const [attr, value] of Object.entries(newProps)) {
       if (oldProps[attr] === value) continue;
@@ -109,25 +109,29 @@ export class Render {
     if (!newNode && oldNode)
       return parent.removeChild(parent.childNodes[index]);
     if (newNode && !oldNode) {
-      return parent.appendChild(this.createElement(newNode));
+      return parent.appendChild(this.#createElement(newNode));
     }
 
     if (typeof newNode === "string" || typeof oldNode === "string") {
       if (newNode === oldNode) return;
       return parent.replaceChild(
-        this.createElement(newNode),
+        this.#createElement(newNode),
         parent.childNodes[index]
       );
     }
     if (newNode.tag !== oldNode.tag) {
       return parent.replaceChild(
-        this.createElement(newNode),
+        this.#createElement(newNode),
         parent.childNodes[index]
       );
     }
 
-    this.updateAttributes(parent.children[index], newNode.props, oldNode.props);
-    this.updateEventhandlers(
+    this.#updateAttributes(
+      parent.children[index],
+      newNode.props,
+      oldNode.props
+    );
+    this.#updateEventhandlers(
       parent.children[index],
       newNode.events,
       oldNode.events
