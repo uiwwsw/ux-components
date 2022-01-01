@@ -27,11 +27,11 @@ export class H {
 }
 export class Render {
   #h: H;
-  #$rootSelector: Element;
+  $rootSelector: Element;
   constructor(h: H, rootSelector: string) {
     this.#h = h;
-    this.#$rootSelector = document.querySelector(rootSelector);
-    this.#$rootSelector.appendChild(this.createElement(this.#h));
+    this.$rootSelector = document.querySelector(rootSelector);
+    h && this.$rootSelector.appendChild(this.createElement(this.#h));
   }
 
   createElement(h: TH) {
@@ -93,10 +93,11 @@ export class Render {
   }
   updateElement(
     newNode: TH,
+    parent: Element = this.$rootSelector,
     oldNode: TH = this.#h,
-    parent: Element = this.#$rootSelector,
     index = 0
   ) {
+    console.log(parent, index);
     // console.log("new", newNode);
     // console.log("old", oldNode);
     // console.log(
@@ -140,8 +141,8 @@ export class Render {
     for (let i = 0; i < maxLength; i++) {
       this.updateElement(
         newNode.children[i] || "",
-        oldNode.children[i] || "",
         parent.children[index],
+        oldNode.children[i] || "",
         i
       );
     }

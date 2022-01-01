@@ -1,4 +1,3 @@
-const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const path = require("path");
 
 module.exports = {
@@ -24,10 +23,11 @@ module.exports = {
         ],
       },
       {
-        test: /\.scss$/,
+        test: /\.s[ac]ss$/i,
         use: [
-          MiniCssExtractPlugin.loader,
           // Creates `style` nodes from JS strings
+          "style-loader",
+          // Translates CSS into CommonJS
           "css-loader",
           // Compiles Sass to CSS
           "sass-loader",
@@ -38,7 +38,6 @@ module.exports = {
   resolve: {
     extensions: [".ts"],
   },
-  plugins: [new MiniCssExtractPlugin({ filename: "./style.css" })],
   // output: {
   //   filename: "bundle.js",
   //   path: path.resolve(__dirname, "dist"),
@@ -46,7 +45,7 @@ module.exports = {
   output: {
     path: path.resolve(__dirname, "./dist"),
     filename: "[name]",
-    library: "ux-scroll",
+    library: "ux-components",
     libraryTarget: "umd",
     globalObject: "this",
     umdNamedDefine: true,

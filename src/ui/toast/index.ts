@@ -1,19 +1,17 @@
-import { H, Render } from "../virtual-dom";
-import { ComponentProps, Ui } from "./index";
+import "./style.scss";
+import { H, Render } from "../../virtual-dom";
+import { ComponentProps, Ui } from "../index";
 interface DialogProps {
   message: string;
   header?: string;
   theme?: string;
 }
 interface DialogComponentProps extends ComponentProps, DialogProps {}
-export default class Dialog extends Ui<DialogComponentProps> {
+export default class Toast extends Ui<DialogComponentProps> {
   readonly renderer = new Render(
-    new H("div", undefined, { id: "ux-dialog" }),
+    new H("div", undefined, { id: this.id }),
     "#ux-components"
   );
-  constructor(id: string) {
-    super(id);
-  }
 
   show(props: DialogProps) {
     const id = this.uuid();

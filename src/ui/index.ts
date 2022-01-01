@@ -9,13 +9,10 @@ export interface Ids<T> {
 
 export class Ui<T extends ComponentProps> {
   #ids: Ids<T> = {};
-  #id: string;
-  readonly renderer = new Render(
-    new H("div", undefined, { id: "ux-components" }),
-    "body"
-  );
+  protected id: string;
+  readonly renderer: Render;
   constructor(id: string) {
-    this.#id = id;
+    this.id = id;
   }
 
   #render() {
@@ -24,12 +21,9 @@ export class Ui<T extends ComponentProps> {
 
   get #template() {
     const children = Object.entries(this.ids).map(
-      ([id, props]) =>
-        new H("div", [props.content], {
-          "data-id": id,
-        })
+      ([_, props]) => props.content
     );
-    return new H("div", children, { id: this.#id });
+    return new H("div", children, { id: this.id });
   }
 
   protected set ids({ id, props }: { id?: string; props?: T }) {
