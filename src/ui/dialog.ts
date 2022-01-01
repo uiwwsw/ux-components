@@ -1,6 +1,12 @@
 import { H, Render } from "../virtual-dom";
 import { ComponentProps, Ui } from "./index";
-export default class Dialog extends Ui<ComponentProps> {
+interface DialogProps {
+  message: string;
+  header?: string;
+  theme?: string;
+}
+interface DialogComponentProps extends ComponentProps, DialogProps {}
+export default class Dialog extends Ui<DialogComponentProps> {
   readonly renderer = new Render(
     new H("div", undefined, { id: "ux-dialog" }),
     "#ux-components"
@@ -9,13 +15,13 @@ export default class Dialog extends Ui<ComponentProps> {
     super(id);
   }
 
-  show({ message, header }: { message: string; header?: string }) {
+  show(props: DialogProps) {
     const id = this.uuid();
     const h = new H(
       "div",
       [
-        new H("div", [header], { class: "ux-dialog__header" }),
-        new H("div", [message], { class: "ux-dialog__content" }),
+        new H("div", [props.header], { class: "ux-dialog__header" }),
+        new H("div", [props.message], { class: "ux-dialog__content" }),
         new H(
           "div",
           [
@@ -30,6 +36,6 @@ export default class Dialog extends Ui<ComponentProps> {
       ],
       { class: "ux-dialog" }
     );
-    return super._show(id, { content: h });
+    return super._show(id, { ...props, content: h });
   }
 }
