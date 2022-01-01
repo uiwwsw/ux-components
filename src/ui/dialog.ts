@@ -1,5 +1,5 @@
 import { H, Render } from "../virtual-dom";
-import { COMPONENT_THEME, ComponentProps, Ui } from "./index";
+import { ComponentProps, Ui } from "./index";
 export default class Dialog extends Ui<ComponentProps> {
   readonly renderer = new Render(
     new H("div", undefined, { id: "ux-dialog" }),

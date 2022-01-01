@@ -7,7 +7,7 @@ const d = new Dialog("ux-dialog");
 // });
 const ee = d.show({ message: "매셎;111" });
 d.show({ message: "매셎223123;" });
-// d.hide(ee);
+d.hide(ee);
 // const id = d.show({
 //   message: "dwdad",
 // });
@@ -16,4 +16,3 @@ d.show({ message: "매셎223123;" });
 // });
 // const dwdw = d.hide(id);
 // d.hide(id);
-export { Dialog };

@@ -1,16 +1,10 @@
 import { H, Render } from "../virtual-dom";
-// import type { Render } from "../virtual-dom";
-export enum COMPONENT_THEME {
-  "positive" = "positive",
-  "negative" = "negative",
-}
+
 export interface ComponentProps {
   content: H;
-  theme?: COMPONENT_THEME;
 }
-export type ID = string;
 export interface Ids<T> {
-  [key: ID]: T;
+  [key: string]: T;
 }
 
 export class Ui<T extends ComponentProps> {
@@ -57,7 +51,7 @@ export class Ui<T extends ComponentProps> {
     this.ids = { id, props };
     return id;
   }
-  protected hide(id: string) {
+  hide(id: string) {
     this.ids = { id };
   }
 }
