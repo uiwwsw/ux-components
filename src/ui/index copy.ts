@@ -23,7 +23,6 @@ export class Ui<T extends ComponentProps> {
     const children = Object.entries(this.ids).map(
       ([_, props]) => props.content
     );
-    console.log(this.id);
     return new H("div", children, { id: this.id });
   }
 

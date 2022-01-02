@@ -26,12 +26,10 @@ export class H {
   }
 }
 export class Render {
-  #h: H;
+  h: H;
   $rootSelector: Element;
-  constructor(h: H, rootSelector: string) {
-    this.#h = h;
+  constructor(rootSelector: string) {
     this.$rootSelector = document.querySelector(rootSelector);
-    h && this.$rootSelector.appendChild(this.#createElement(this.#h));
   }
 
   #createElement(h: TH) {
@@ -93,11 +91,10 @@ export class Render {
   }
   updateElement(
     newNode: TH,
+    oldNode: TH = this.h,
     parent: Element = this.$rootSelector,
-    oldNode: TH = this.#h,
     index = 0
   ) {
-    console.log(parent, index);
     // console.log("new", newNode);
     // console.log("old", oldNode);
     // console.log(
@@ -106,6 +103,7 @@ export class Render {
     //   parent,
     //   "djkalwdjlakwjdlawdawda11111"
     // );
+    // console.log(parent);
     if (!newNode && oldNode)
       return parent.removeChild(parent.childNodes[index]);
     if (newNode && !oldNode) {
@@ -145,12 +143,12 @@ export class Render {
     for (let i = 0; i < maxLength; i++) {
       this.updateElement(
         newNode.children[i] || "",
-        parent.children[index],
         oldNode.children[i] || "",
+        parent.children[index],
         i
       );
     }
-    this.#h = newNode;
+    this.h = newNode;
     // const b = a(this.rootSelector, this.h, newNode);
     // console.log(b);
   }

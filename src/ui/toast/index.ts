@@ -8,13 +8,12 @@ interface DialogProps {
 }
 interface DialogComponentProps extends ComponentProps, DialogProps {}
 export default class Toast extends Ui<DialogComponentProps> {
-  readonly renderer = new Render(
-    new H("div", undefined, { id: this.id }),
-    "#ux-components"
-  );
-
+  constructor() {
+    super("ux-toast");
+    super.createRoot();
+  }
   show(props: DialogProps) {
-    const id = this.uuid();
+    const id = super.uuid();
     const h = new H(
       "div",
       [
@@ -24,7 +23,7 @@ export default class Toast extends Ui<DialogComponentProps> {
           "div",
           [
             new H("button", ["닫기"], undefined, {
-              onclick: () => this.hide(id),
+              onclick: () => super.hide(id),
             }),
           ],
           {

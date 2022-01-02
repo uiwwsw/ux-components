@@ -9,19 +9,42 @@ export interface Ids<T> {
 
 export class Ui<T extends ComponentProps> {
   #ids: Ids<T> = {};
-  protected id: string;
-  readonly renderer: Render;
+  #id: string;
+  #root: string = "#ux-components";
+  protected renderer: Render;
+
   constructor(id: string) {
-    this.id = id;
+    this.#id = id;
+  }
+
+  #render() {
+    this.renderer.updateElement(this.#template);
+  }
+
+  get #template() {
+    const children = Object.entries(this.ids).map(
+      ([_, props]) => props.content
+    );
+    return new H("div", children);
+  }
+  protected createRoot() {
+    const h = new H("div");
+    this.renderer = new Render(this.#root);
+    this.renderer.updateElement(new H("div", [h], { id: this.#id }));
+    this.renderer.$rootSelector = document.querySelector(`#${this.#id}`);
+    this.renderer.h = h;
   }
 
   protected set ids({ id, props }: { id?: string; props?: T }) {
     if (props) this.#ids[id] = props;
     else delete this.#ids[id];
+    this.#render();
   }
+
   protected get ids(): Ids<T> {
     return this.#ids;
   }
+
   protected uuid() {
     return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, (c) => {
       var r = (Math.random() * 16) | 0,
