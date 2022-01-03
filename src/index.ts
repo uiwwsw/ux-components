@@ -7,8 +7,10 @@ const t = new Toast();
 
 // const d22 = new Toast("ux-toast");
 const d = new Dialog();
-t.show({ message: "dajwkdlaw" });
-// d.show({ message: "dajwkdlaw" });
+d.show({ message: "dajwkdlaw" });
+d.show({ message: "dajwkdlaw" });
+d.show({ message: "dajwkdlaw" });
+// d.show({ message: "dajwkd4323law" });
 // t.show({
 //   message: "23123123123",
 // });
