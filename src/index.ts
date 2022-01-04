@@ -18,8 +18,7 @@ d.show({ message: "dajwkdlaw" });
 // console.log(document.getElementById("ddd"));
 document.getElementById("ddd2").onclick = () =>
   d.show({ message: "매셎2312323123;" });
-document.getElementById("ddd").onclick = () =>
-  t.show({ message: "매셎2312323123;" });
+document.getElementById("ddd").onclick = () => d.show({ message: "32323122;" });
 // const id = d.show({
 //   message: "dwdad",
 // });

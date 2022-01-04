@@ -8,7 +8,6 @@ type Events = {
 type TH = string | H;
 type Children = (H | string)[];
 export class H {
-  id: string;
   tag: string;
   props: Props;
   children: Children;
@@ -26,7 +25,7 @@ export class H {
   }
 }
 export class Render {
-  h: H;
+  h: TH;
   $rootSelector: Element;
   constructor(rootSelector: string) {
     this.$rootSelector = document.querySelector(rootSelector);
@@ -57,14 +56,6 @@ export class Render {
     return $el;
   }
   #updateEventhandlers(target: Element, newEvents: Events, oldEvents: Events) {
-    // for (const attr of Object.keys(oldEvents)) {
-    //   (target as any)[attr as "onclick"] = null;
-    //   console.log(target);
-    // }
-    // for (const [attr, value] of Object.entries(newEvents)) {
-    //   console.log("vadawdaw");
-    //   (target as any)[attr as "onclick"] = value;
-    // }
     for (const [attr, value] of Object.entries(newEvents)) {
       if (oldEvents[attr as EventsKeys] === value) continue;
       (target as any)[attr] = value;
@@ -104,36 +95,21 @@ export class Render {
     //   "djkalwdjlakwjdlawdawda11111"
     // );
     // console.log(parent);
-    if (!newNode && oldNode)
-      return parent.removeChild(parent.childNodes[index]);
-    if (newNode && !oldNode) {
+    const children = parent.children[index];
+    if (!newNode && oldNode) return parent.removeChild(children);
+    if (newNode && !oldNode)
       return parent.appendChild(this.#createElement(newNode));
-    }
 
     if (typeof newNode === "string" || typeof oldNode === "string") {
       if (newNode === oldNode) return;
-      return parent.replaceChild(
-        this.#createElement(newNode),
-        parent.childNodes[index]
-      );
+      return parent.replaceChild(this.#createElement(newNode), children);
     }
     if (newNode.tag !== oldNode.tag) {
-      return parent.replaceChild(
-        this.#createElement(newNode),
-        parent.childNodes[index]
-      );
+      return parent.replaceChild(this.#createElement(newNode), children);
     }
 
-    this.#updateAttributes(
-      parent.children[index],
-      newNode.props,
-      oldNode.props
-    );
-    this.#updateEventhandlers(
-      parent.children[index],
-      newNode.events,
-      oldNode.events
-    );
+    this.#updateAttributes(children, newNode.props, oldNode.props);
+    this.#updateEventhandlers(children, newNode.events, oldNode.events);
 
     const maxLength = Math.max(
       newNode.children.length,
@@ -144,7 +120,7 @@ export class Render {
       this.updateElement(
         newNode.children[i] || "",
         oldNode.children[i] || "",
-        parent.children[index],
+        children,
         i
       );
     }
